@@ -129,3 +129,62 @@ p { font-size:14px; line-height:1.6; color:#4b5563; margin-bottom:16px; }
   h1{ font-size:32px; }
   h2{ font-size:28px; }
 }
+
+/* --- v5 overrides --- */
+
+:root{ --header-h:64px; --page-pad:32px; --maxw:1200px; }
+
+/* Keep slide full-height, center children, and normalize widths */
+.slide{
+  width:100%;
+  height: calc(100vh - var(--header-h));
+  padding:40px var(--page-pad);
+  overflow:auto;
+  background:#f7f9fc;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+
+/* Ensure top-level content blocks align to a consistent width */
+.slide > h1, .slide > h2, .slide > .subtitle,
+.slide > .metrics-grid, .slide > .content-section,
+.slide > .two-column, .slide > .three-column,
+.slide > .chart-container, .slide > table.tier-table,
+.slide > p {
+  width: min(var(--maxw), calc(100% - var(--page-pad)*2));
+}
+
+/* Title slide is full-bleed and should NOT be width-limited */
+.title-slide{
+  padding:40px;
+  width:100%;
+  height: calc(100vh - var(--header-h));
+  background: linear-gradient(135deg, #0a4a5c 0%, #0d5d73 100%);
+  color:white;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+}
+.title-slide > *{ width:auto; } /* prevent central box look */
+.title-slide h1{ font-size: clamp(36px, 6vw, 64px); color:white; margin-bottom:20px; letter-spacing:-1px; }
+.title-slide .tagline{ font-size: clamp(18px, 2.6vw, 28px); color:#93c5fd; margin-bottom:40px; font-weight:300; }
+
+/* Header right controls: wrap to avoid overlap */
+.header .right{ display:flex; align-items:center; gap:12px; flex-wrap: wrap; justify-content:flex-end; }
+.header .right .nav-btn{ flex:0 0 auto; white-space:nowrap; }
+.slideNumber{ color:white; font-size:14px; min-width:60px; text-align:center; }
+.slide-indicator{ display:flex; gap:8px; align-items:center; }
+.dot{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.35); transition:.2s; }
+.dot.active{ background:#fff; width:24px; border-radius:4px; }
+
+/* Hide dots on narrower screens to keep buttons apart */
+@media (max-width: 1100px){
+  .slide-indicator{ display:none; }
+}
+
+/* Minor: ensure buttons don't stack on top due to transforms */
+.nav-btn{ transform: translateZ(0); }
+
+/* Keep body from scrolling (slides scroll) but allow on small screens */
+body{ height:100vh; overflow:hidden; background:#0a4a5c; }
+@media (max-width: 768px){ body{ overflow:auto; } }
