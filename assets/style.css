@@ -1,5 +1,5 @@
 
-:root{ --header-h:64px; }
+:root{ --header-h:64px; --page-pad:32px; --maxw:1100px; }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -248,7 +248,7 @@ body{ height:100vh; overflow:hidden; background:#0a4a5c; }
   border-radius:16px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(10,74,92,0.08);
   padding: clamp(24px, 4vw, 56px);
-  width: min(960px, calc(100% - var(--page-pad)*2));
+  width: min(var(--maxw), calc(100% - var(--page-pad)*2));
   margin: auto;
   text-align:center;
 }
