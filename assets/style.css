@@ -1,3 +1,4 @@
+:root{--header-h:72px;}
 
 * {
     margin: 0;
@@ -27,7 +28,7 @@ body {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-}
+ position: sticky; top:0; z-index:100; }
 
 .logo {
     color: white;
@@ -70,18 +71,21 @@ body {
 .content {
     flex: 1;
     background: #f7f9fc;
-    padding: 0;           /* Slides control their own padding */
-    display: block;
+    padding: 0;
     width: 100%;
-    min-height: calc(100vh - 80px); /* approx header height */
 }
 
 .title-slide {
+    height: calc(100vh - var(--header-h));
     background: linear-gradient(135deg, #0a4a5c 0%, #0d5d73 100%);
     color: white;
-    border-radius: 12px;
-    padding: 80px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    border-radius: 0;
+    padding: 40px;
 }
 
 h1 {
@@ -362,10 +366,8 @@ p {
     .content {
     flex: 1;
     background: #f7f9fc;
-    padding: 0;           /* Slides control their own padding */
-    display: block;
+    padding: 0;
     width: 100%;
-    min-height: calc(100vh - 80px); /* approx header height */
 }
 }
 
@@ -373,10 +375,8 @@ p {
     .content {
     flex: 1;
     background: #f7f9fc;
-    padding: 0;           /* Slides control their own padding */
-    display: block;
+    padding: 0;
     width: 100%;
-    min-height: calc(100vh - 80px); /* approx header height */
 }
     h1 { font-size: 32px; }
     h2 { font-size: 28px; }
@@ -386,7 +386,7 @@ p {
 /* Slide (per page) */
 .slide {
     width: 100%;
-    min-height: calc(100vh - 80px); /* below header */
+    height: calc(100vh - var(--header-h));
     padding: 40px;
     overflow-y: auto;
     background: #f7f9fc;
@@ -400,6 +400,7 @@ p {
 
 /* Title slide full-bleed gradient */
 .title-slide {
+    height: calc(100vh - var(--header-h));
     background: linear-gradient(135deg, #0a4a5c 0%, #0d5d73 100%);
     color: white;
     display: flex;
@@ -408,5 +409,6 @@ p {
     align-items: center;
     text-align: center;
     border-radius: 0;
+    padding: 40px;
 }
 .title-slide h1, .title-slide .tagline, .title-slide p { color: white; }
