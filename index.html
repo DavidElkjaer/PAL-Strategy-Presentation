@@ -12,13 +12,13 @@
   <div class="presentation-container">
     <div class="header">
       <a class="logo" href="index.html">PeopleAnalyticsLab</a>
-      <div class="nav-links">
-        <a class="nav-btn" href="" style="pointer-events:none;opacity:.5;">← Previous</a>
-        <span class="slideNumber">1 / 11</span>
-        <a class="nav-btn" href="executive-summary.html" >Next →</a>
+      <div class="right">
+        <a class="nav-btn" href="gtm.html" >← Previous</a>
+        <span class="slideNumber">6 / 11</span>
+        <div class="slide-indicator"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <a class="nav-btn" href="modules.html" >Next →</a>
       </div>
-    </div>
-    <main class="content">
+    </div><main class="content">
 <section class="slide title-slide">
 <div class="title-slide">
   <h1 style="color:white;font-size:64px;margin-bottom:20px;">PeopleAnalyticsLab</h1>
@@ -34,5 +34,14 @@
 </section>
 </main>
   </div>
+
+<script id="keyboard-nav">
+document.addEventListener('keydown', function(e){
+  var prev = document.querySelector('.right .nav-btn[href]:first-child');
+  var next = document.querySelector('.right .nav-btn[href]:last-child');
+  if(e.key === 'ArrowRight' && next && next.getAttribute('href')){ window.location.href = next.getAttribute('href'); }
+  if(e.key === 'ArrowLeft' && prev && prev.getAttribute('href')){ window.location.href = prev.getAttribute('href'); }
+});
+</script>
 </body>
 </html>
