@@ -241,3 +241,33 @@ body{ height:100vh; overflow:hidden; background:#0a4a5c; }
   .slide{ height:auto; min-height: calc(100vh - var(--header-h)); padding:20px; }
   .title-slide{ padding:20px; }
 }
+
+/* v7 - white hero card */
+.hero-card{
+  background:#ffffff;
+  border-radius:16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(10,74,92,0.08);
+  padding: clamp(24px, 4vw, 56px);
+  width: min(960px, calc(100% - var(--page-pad)*2));
+  margin: auto;
+  text-align:center;
+}
+.hero-card .brand{
+  display:inline-flex; align-items:center; gap:10px;
+  color:#0a4a5c; font-weight:700; letter-spacing:-0.2px;
+  font-size: clamp(28px, 5.6vw, 56px);
+  margin-bottom: 12px;
+}
+.hero-card .subtitle{
+  font-size: clamp(16px, 2.2vw, 22px);
+  color:#2563eb; font-weight:500; margin-bottom: 18px;
+}
+.hero-card .lead{
+  font-size: clamp(14px, 2vw, 18px);
+  color:#4b5563; line-height:1.6; margin-bottom: 22px;
+}
+.hero-card .meta{
+  font-size: 12px; letter-spacing:1px; text-transform:uppercase;
+  color:#374151; opacity:.7;
+}
+.hero-accent{ height:4px; width:64px; background:#0a4a5c; border-radius:4px; margin:0 auto 18px; }
