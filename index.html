@@ -1,37 +1,1591 @@
+Here’s a clean, accessible, and fully updated single-file build. Save it as `index.html`.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strategy Overview – PeopleAnalyticsLab</title>
-  <link rel="stylesheet" href="assets/style.css">
-  <script src="assets/order.js"></script>
-  <script src="assets/nav.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeopleAnalyticsLab - Interactive Strategy Presentation</title>
+
+  <!-- Meta -->
+  <meta name="description" content="PeopleAnalyticsLab — Fractional HR analytics for Nordic mid-market companies. Interactive strategy overview." />
+  <meta property="og:title" content="PeopleAnalyticsLab — Strategy" />
+  <meta property="og:description" content="Fractional HR analytics: dashboards, predictive models, and strategic enablement." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0a4a5c" />
+
+  <style>
+    :root{
+      --bg: #0a4a5c;
+      --bg-2: #0d5d73;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --brand: #0a4a5c;
+      --accent: #eff6ff;
+      --shadow: 0 4px 20px rgba(0,0,0,0.1);
+      --radius-lg: 12px;
+      --radius-md: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 100%);
+      min-height: 100vh;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .presentation-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    header.header {
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .header h1 {
+      color: var(--brand);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+
+    .tagline { color: var(--muted); font-size: 20px; margin-bottom: 20px; }
+
+    .header-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .stat-card {
+      background: #f0f9ff;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--brand);
+    }
+
+    .stat-value { font-size: 28px; font-weight: 600; color: var(--brand); }
+    .stat-label {
+      font-size: 12px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;
+    }
+
+    /* Navigation */
+    nav.nav-container {
+      background: var(--panel);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+    }
+    .nav-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+    .nav-btn {
+      padding: 10px 20px;
+      background: #f1f5f9;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-btn:hover, .nav-btn:focus-visible { background: var(--brand); color: #fff; }
+    .nav-btn.active { background: var(--brand); color: #fff; }
+
+    /* Sections */
+    main { display: block; }
+    section.section {
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: background 0.3s;
+      scroll-margin-top: 90px;
+      content-visibility: auto;
+      contain-intrinsic-size: 600px;
+    }
+
+    .section-header {
+      padding: 25px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .section-header:hover { background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); }
+
+    .section-title { display: flex; align-items: center; gap: 15px; }
+    .section-icon {
+      width: 40px; height: 40px; background: var(--brand); color: #fff;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+
+    .section h2 { color: var(--brand); font-size: 24px; font-weight: 600; }
+    .section-subtitle { color: var(--muted); font-size: 14px; margin-top: 5px; }
+
+    .toggle-section-btn {
+      border: none; background: transparent; cursor: pointer; padding: 6px 8px;
+      border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .toggle-section-btn:focus-visible {
+      outline: 3px solid var(--brand); outline-offset: 2px;
+    }
+    .expand-icon { font-size: 24px; color: #64748b; transition: transform 0.3s; }
+    .toggle-section-btn[aria-expanded="true"] .expand-icon { transform: rotate(180deg); }
+
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .content-inner { padding: 30px; }
+
+    /* Content styles */
+    .highlight-box {
+      background: var(--accent);
+      border-left: 4px solid var(--brand);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .grid-2 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px; margin: 20px 0;
+    }
+    .grid-3 {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px; margin: 20px 0;
+    }
+
+    .card {
+      background: var(--panel-2);
+      padding: 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid #e2e8f0;
+    }
+    .card h3 { color: var(--brand); font-size: 18px; margin-bottom: 15px; }
+    .card h4 { color: #475569; font-size: 16px; margin: 15px 0 10px; }
+    .card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .card ul { margin: 10px 0; padding-left: 20px; }
+    .card li { color: var(--muted); font-size: 14px; margin: 5px 0; }
+
+    .metric-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px; margin: 20px 0;
+    }
+    .metric {
+      background: white; border: 2px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center;
+    }
+    .metric-large { font-size: 32px; font-weight: 600; color: var(--brand); }
+    .metric-small {
+      font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; min-width: 720px; }
+    caption { text-align: left; color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+    th {
+      background: var(--brand); color: white; padding: 12px; text-align: left; font-size: 14px;
+    }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    tr:nth-child(even) { background: var(--panel-2); }
+
+    .process-flow {
+      display: flex; justify-content: space-between; margin: 30px 0; flex-wrap: wrap; gap: 20px;
+    }
+    .process-step {
+      flex: 1; min-width: 200px; text-align: center; padding: 20px;
+      background: var(--panel-2); border-radius: var(--radius-md); position: relative;
+    }
+    .process-number {
+      width: 40px; height: 40px; background: var(--brand); color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 600;
+    }
+
+    .timeline { position: relative; padding-left: 40px; margin: 20px 0; }
+    .timeline-item { position: relative; padding-bottom: 30px; }
+    .timeline-item:before {
+      content: ''; position: absolute; left: -30px; top: 5px; width: 10px; height: 10px; background: var(--brand); border-radius: 50%;
+    }
+    .timeline-item:after {
+      content: ''; position: absolute; left: -26px; top: 15px; width: 2px; height: calc(100% - 10px); background: #e2e8f0;
+    }
+    .timeline-item:last-child:after { display: none; }
+    .timeline-date { color: var(--brand); font-weight: 600; margin-bottom: 5px; }
+    .timeline-content { color: var(--muted); font-size: 14px; }
+
+    /* Subsections */
+    .subsection { margin: 20px 0; border: 1px solid #e2e8f0; border-radius: var(--radius-md); overflow: hidden; }
+    .subsection-header {
+      padding: 15px; background: var(--panel-2);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .subsection-header:hover { background: #f1f5f9; }
+    .subsection-title { font-weight: 600; color: #475569; }
+    .toggle-subsection-btn {
+      border: none; background: transparent; cursor: pointer; padding: 6px 8px; border-radius: 8px;
+    }
+    .toggle-subsection-btn:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+    .subsection-content { display: none; padding: 15px; background: white; }
+    .subsection.open .subsection-content { display: block; }
+    .subsection.open .expand-icon { transform: rotate(180deg); }
+
+    /* Visual charts */
+    .chart-container {
+      background: white; border-radius: var(--radius-md); padding: 20px; margin: 20px 0; border: 1px solid #e2e8f0;
+    }
+    .chart-title { font-size: 18px; font-weight: 600; color: var(--brand); margin-bottom: 15px; text-align: center; }
+    .revenue-chart {
+      display: flex; align-items: end; justify-content: space-around;
+      height: 200px; margin: 20px 0; padding: 20px 0; border-bottom: 2px solid #e2e8f0; position: relative;
+    }
+    .revenue-bar { display: flex; flex-direction: column; align-items: center; width: clamp(56px, 10vw, 90px); }
+    .bar {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--bg-2) 100%);
+      border-radius: 4px 4px 0 0; width: 70%; position: relative; transition: all 0.3s ease;
+    }
+    .bar:hover { background: linear-gradient(135deg, var(--bg-2) 0%, #1a6f8a 100%); transform: scale(1.05); }
+    .bar-label { margin-top: 10px; font-size: 12px; font-weight: 600; color: #475569; text-align: center; }
+    .bar-value {
+      position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+      background: var(--brand); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+
+    .timeline-visual {
+      display: flex; justify-content: space-between; align-items: center; margin: 30px 0; position: relative; padding: 20px 0;
+    }
+    .timeline-visual::before {
+      content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 3px;
+      background: linear-gradient(90deg, var(--brand) 0%, var(--muted) 100%); z-index: 1;
+    }
+    .timeline-phase {
+      position: relative; z-index: 2; text-align: center; background: white;
+      padding: 10px; border-radius: var(--radius-md); border: 2px solid var(--brand); min-width: 120px;
+    }
+    .phase-date { font-size: 12px; font-weight: 600; color: var(--brand); margin-bottom: 5px; }
+    .phase-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+    .phase-detail { font-size: 11px; color: var(--muted); }
+
+    .geographic-expansion {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 20px 0;
+    }
+    .country-phase {
+      text-align: center; padding: 20px; border: 2px solid #e2e8f0; border-radius: var(--radius-lg);
+      transition: all 0.3s ease; position: relative; overflow: hidden; background: #fff;
+    }
+    .country-phase::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(10, 74, 92, 0.1), transparent); transition: left 0.8s ease;
+    }
+    .country-phase:hover::before { left: 100%; }
+    .country-phase:hover { border-color: var(--brand); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(10, 74, 92, 0.1); }
+    .country-flag { font-size: 48px; margin-bottom: 10px; }
+    .country-name { font-size: 16px; font-weight: 600; color: var(--brand); margin-bottom: 5px; }
+    .country-timeline { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .country-status { font-size: 11px; color: #475569; font-style: italic; }
+
+    .competitive-matrix {
+      display: grid; grid-template-columns: 1fr 2fr 2fr; gap: 2px; background: var(--brand);
+      border-radius: var(--radius-md); overflow: hidden; margin: 20px 0; min-width: 720px;
+    }
+    .matrix-header { background: var(--brand); color: white; padding: 15px; font-weight: 600; font-size: 14px; }
+    .matrix-cell { background: white; padding: 15px; font-size: 13px; line-height: 1.4; }
+    .matrix-competitor { font-weight: 600; color: var(--ink); }
+    .advantage-highlight { background: var(--accent); border-left: 3px solid var(--brand); padding-left: 12px; }
+
+    .scaling-roadmap { display: flex; flex-direction: column; gap: 20px; margin: 20px 0; }
+    .scaling-milestone {
+      display: flex; align-items: center; padding: 20px; background: var(--panel-2);
+      border-radius: var(--radius-md); border-left: 4px solid var(--brand); transition: all 0.3s ease;
+    }
+    .scaling-milestone:hover { background: #f1f5f9; transform: translateX(5px); }
+    .milestone-trigger {
+      background: var(--brand); color: white; padding: 10px 20px; border-radius: 20px;
+      font-weight: 600; font-size: 14px; min-width: 100px; text-align: center; margin-right: 20px;
+    }
+    .milestone-action { flex: 1; }
+    .milestone-title { font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+    .milestone-description { color: var(--muted); font-size: 14px; }
+
+    /* Focus & motion */
+    button:focus-visible, .nav-btn:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .geographic-expansion { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-container { position: static; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .process-flow { flex-direction: column; }
+      .competitive-matrix { grid-template-columns: 1fr; }
+    }
+
+    /* Print */
+    @media print {
+      nav.nav-container { display: none !important; }
+      body { background: #fff !important; }
+      .section-content { max-height: none !important; }
+      .section, header.header { box-shadow: none !important; }
+    }
+
+    .visually-hidden {
+      position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0;
+      clip: rect(0 0 0 0); overflow:hidden; white-space:nowrap;
+    }
+  </style>
 </head>
 <body>
   <div class="presentation-container">
-    <div class="header">
-      <a class="logo" href="index.html">PeopleAnalyticsLab</a>
-      <div class="right">
-        <a class="nav-btn prev" href="#">← Previous</a>
-        <span class="slideNumber">1 / 1</span>
-        <div class="slide-indicator" id="dots"></div>
-        <a class="nav-btn next" href="#">Next →</a>
-      </div>
-    </div>
-    <main class="content">
-      <section class="slide">
-        
-<div class="hero-card">
-  <div class="hero-accent"></div>
-  <div class="brand">PeopleAnalyticsLab</div>
-  <div class="subtitle">Managed HR Analytics for Nordic Mid‑Sized Companies</div>
-  <p class="lead">Your fractional analytics team—delivered in four weeks—operating fully in your Microsoft environment.</p>
-  <div class="meta">Strategy Overview · Q3 2025</div>
-</div>
+    <!-- Header -->
+    <header class="header" role="banner">
+      <h1>PeopleAnalyticsLab</h1>
+      <p class="tagline">Your Fractional HR Analytics Team</p>
+      <p style="color: var(--muted); margin-top: 10px;">
+        Transforming workforce data into strategic insights for Nordic mid-market companies
+      </p>
 
+      <div class="header-stats" aria-label="Key stats">
+        <div class="stat-card">
+          <div class="stat-value">€75M</div>
+          <div class="stat-label">Market Opportunity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1-5K</div>
+          <div class="stat-label">Target Company Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">€4-8K</div>
+          <div class="stat-label">Monthly Subscription</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">4 weeks</div>
+          <div class="stat-label">Time to Deploy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">65%</div>
+          <div class="stat-label">Gross Margin</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">€300-600K</div>
+          <div class="stat-label">Q4 2025 ARR Target</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-container" aria-label="Section navigation">
+      <div class="nav-buttons">
+        <button class="nav-btn active" data-target="vision">Vision & Mission</button>
+        <button class="nav-btn" data-target="market">Market Opportunity</button>
+        <button class="nav-btn" data-target="solution">Solution</button>
+        <button class="nav-btn" data-target="tiers">Service Tiers</button>
+        <button class="nav-btn" data-target="gtm">Go-to-Market</button>
+        <button class="nav-btn" data-target="financials">Financials</button>
+        <button class="nav-btn" data-target="competition">Competition</button>
+        <button class="nav-btn" data-target="scaling">Scaling</button>
+        <button class="nav-btn" data-target="priorities">Priorities</button>
+      </div>
+    </nav>
+
+    <main>
+      <!-- Vision & Mission -->
+      <section class="section" id="vision" aria-labelledby="vision-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">🎯</div>
+            <div>
+              <h2 id="vision-title">Vision & Mission</h2>
+              <div class="section-subtitle">Our strategic direction and purpose</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="vision-content" data-section="vision">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Vision & Mission</span>
+          </button>
+        </div>
+        <div class="section-content" id="vision-content" role="region" aria-labelledby="vision-title">
+          <div class="content-inner">
+            <div class="grid-2">
+              <div class="card">
+                <h3>Vision</h3>
+                <p>Make data-driven workforce decisions the norm in mid-sized Nordic companies—transforming how organizations understand, develop, and retain their talent through accessible, actionable analytics.</p>
+              </div>
+              <div class="card">
+                <h3>Mission</h3>
+                <p>We serve as the fractional HR analytics team for mid-sized companies, delivering continuous insights through managed analytics services that combine:</p>
+                <ul>
+                  <li>Best-practice dashboards deployed on client infrastructure</li>
+                  <li>Pre-built predictive models with light customization</li>
+                  <li>Strategic enablement to translate data into decisions</li>
+                  <li>Ongoing partnership that evolves with client needs</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <h3>Strategic Intent</h3>
+              <p>Position PeopleAnalyticsLab as the default HR analytics partner for Nordic mid-market companies by solving the "build vs. buy" dilemma, delivering time-to-value in weeks, creating switching costs through integration, and scaling through partnerships.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Market Opportunity -->
+      <section class="section" id="market" aria-labelledby="market-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">📊</div>
+            <div>
+              <h2 id="market-title">Market Opportunity</h2>
+              <div class="section-subtitle">€75M TAM in the Nordic mid-market</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="market-content" data-section="market">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Market Opportunity</span>
+          </button>
+        </div>
+        <div class="section-content" id="market-content" role="region" aria-labelledby="market-title">
+          <div class="content-inner">
+            <!-- Subsection 1 -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">The Analytics Gap in Mid-Market Companies</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Mid-sized Nordic companies (1,000-5,000 employees) face a critical analytics capability gap that creates both operational challenges and strategic risks. They collect extensive HR data but lack the expertise to transform it into actionable insights.
+                </p>
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Current Challenges</h4>
+                    <ul>
+                      <li><strong>Too small to justify</strong> 2-3 FTE analytics hires (€200K+ annually)</li>
+                      <li><strong>Too complex for DIY</strong> with fragmented HR systems across HRIS, payroll, ATS</li>
+                      <li><strong>Too important to ignore</strong> with mounting regulatory pressure and compliance requirements</li>
+                      <li><strong>Too expensive</strong> with Big 4 consultants charging €200K+ for projects</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Market Dynamics Driving Urgency</h4>
+                    <ul>
+                      <li><strong>CSRD (Corporate Sustainability Reporting Directive)</strong> affecting 50,000+ EU companies</li>
+                      <li><strong>EU pay transparency directive</strong> requiring detailed compensation reporting</li>
+                      <li><strong>Nordic talent scarcity</strong> making retention and workforce planning critical</li>
+                      <li><strong>Post-COVID transformation</strong> driving demand for data-driven HR decisions</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsection 2 -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Nordic Market Opportunity Analysis</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  The Nordic region presents an ideal initial market with approximately 2,500 companies in our target size range (1,000-5,000 employees). These organizations typically have sophisticated HR systems but lack dedicated analytics capabilities, creating a clear market opportunity.
+                </p>
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-large">2,500</div>
+                    <div class="metric-small">Target Companies in Nordic Region</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">€75M</div>
+                    <div class="metric-small">Total Addressable Market (TAM)</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">€25M</div>
+                    <div class="metric-small">Serviceable Addressable Market (SAM)</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">€2.5M</div>
+                    <div class="metric-small">Serviceable Obtainable Market (SOM) by Year 3</div>
+                  </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 20px;">
+                  <h4>Market Opportunity Calculation</h4>
+                  <p>Based on 2,500 target companies × average annual contract value of €72K (Tier 2) × 42% market penetration rate over 10 years = €75M Total Addressable Market. Our initial focus targets 1% market share within 3 years.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsection 3 -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Ideal Customer Profile & Stakeholder Mapping</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our ideal customers are Nordic companies with 1,000-5,000 employees who have outgrown basic HR reporting but lack the scale to justify building internal analytics teams. These organizations typically have multiple HR systems and face increasing pressure for data-driven decisions.
+                </p>
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Company Characteristics</h4>
+                    <ul>
+                      <li><strong>Size:</strong> 1,000-5,000 employees (sweet spot for fractional analytics)</li>
+                      <li><strong>Geography:</strong> Nordic headquarters (Denmark, Sweden, Norway, Finland)</li>
+                      <li><strong>Systems:</strong> Multiple HR platforms (HRIS + Payroll + ATS + Survey tools)</li>
+                      <li><strong>Analytics Maturity:</strong> Basic reporting but no dedicated analytics team</li>
+                      <li><strong>Growth Stage:</strong> Scaling or undergoing digital transformation</li>
+                      <li><strong>Compliance Needs:</strong> Subject to CSRD or EU pay transparency requirements</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Key Stakeholders & Decision Process</h4>
+                    <ul>
+                      <li><strong>Champion:</strong> HR Director/VP People (problem owner, daily user)</li>
+                      <li><strong>Economic Buyer:</strong> CFO (budget approval, ROI focus)</li>
+                      <li><strong>Executive Sponsor:</strong> CEO (strategic alignment, company-wide impact)</li>
+                      <li><strong>Primary Users:</strong> Global HRBPs (data consumers, insight translators)</li>
+                      <li><strong>Influencers:</strong> IT (technical requirements), Legal (compliance), Works Council (employee data privacy)</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 20px;">
+                  <h4>Typical Decision Timeline</h4>
+                  <p>Our target customers typically evaluate HR analytics solutions over 4-6 weeks, with the HR Director initiating the process, CFO evaluating ROI, and CEO providing final approval. The decision is often triggered by compliance deadlines or board-level requests for workforce insights.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Solution -->
+      <section class="section" id="solution" aria-labelledby="solution-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">💡</div>
+            <div>
+              <h2 id="solution-title">Solution & Value Proposition</h2>
+              <div class="section-subtitle">Complete analytics modules with predictive capabilities</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="solution-content" data-section="solution">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Solution</span>
+          </button>
+        </div>
+        <div class="section-content" id="solution-content" role="region" aria-labelledby="solution-title">
+          <div class="content-inner">
+            <!-- Subsection A -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Comprehensive Analytics Service Delivery</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  PeopleAnalyticsLab delivers a complete managed HR analytics service that combines best-practice dashboards, predictive models, and strategic enablement. Unlike traditional consulting or SaaS platforms, we provide ongoing partnership with everything deployed securely in the client's own environment.
+                </p>
+                <div class="process-flow">
+                  <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h4>Analytics Modules</h4>
+                    <p>Integrated dashboards + predictive models for each HR domain, deployed in client's Power BI environment</p>
+                  </div>
+                  <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h4>Strategic Enablement</h4>
+                    <p>Transform Global HRBPs and CHROs into data-driven leaders through training and coaching</p>
+                  </div>
+                  <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h4>Ongoing Partnership</h4>
+                    <p>Continuous evolution and support vs. one-time project delivery</p>
+                  </div>
+                  <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h4>Secure Deployment</h4>
+                    <p>Everything operates within client's existing Microsoft 365 infrastructure for maximum security</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsection B -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Complete Analytics Module Portfolio</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Each analytics module combines descriptive dashboards with predictive capabilities, providing both current state visibility and forward-looking insights. All modules are pre-built using HR best practices but customized for each client's specific data structure and business needs.
+                </p>
+                <div class="grid-3">
+                  <div class="card">
+                    <h4>Core Workforce Analytics</h4>
+                    <p><strong>Dashboard:</strong> Headcount trends, demographic breakdowns, cost analysis by department and role</p>
+                    <p><em>Foundational module included in all service tiers - provides the data foundation for all other modules</em></p>
+                  </div>
+                  <div class="card">
+                    <h4>Turnover & Retention</h4>
+                    <p><strong>Dashboard:</strong> Turnover trends, retention rates, exit analysis, cost of turnover</p>
+                    <p><strong>Predictions:</strong> Individual flight risk scoring, turnover driver analysis, retention probability modeling</p>
+                  </div>
+                  <div class="card">
+                    <h4>Recruitment Analytics</h4>
+                    <p><strong>Dashboard:</strong> Hiring pipeline analysis, source effectiveness, time-to-hire trends</p>
+                    <p><strong>Predictions:</strong> Time-to-fill forecasting, candidate quality scoring, recruitment demand planning</p>
+                  </div>
+                  <div class="card">
+                    <h4>Absence & Leave</h4>
+                    <p><strong>Dashboard:</strong> Absence patterns, leave liability calculations, wellness trends</p>
+                    <p><strong>Predictions:</strong> Absence risk detection, seasonal trend forecasting, wellness intervention targeting</p>
+                  </div>
+                  <div class="card">
+                    <h4>Diversity & Inclusion</h4>
+                    <p><strong>Dashboard:</strong> Representation analysis, pay gap identification, promotion equity tracking</p>
+                    <p><strong>Predictions:</strong> DEI goal trajectory modeling, bias detection algorithms, intervention impact forecasting</p>
+                  </div>
+                  <div class="card">
+                    <h4>Rewards & Pay Equity</h4>
+                    <p><strong>Dashboard:</strong> Compensation analysis, total rewards overview, market benchmarking</p>
+                    <p><strong>Predictions:</strong> Pay equity regression analysis, compensation risk modeling, market adjustment forecasting</p>
+                  </div>
+                  <div class="card">
+                    <h4>Training & Development</h4>
+                    <p><strong>Dashboard:</strong> Training investments, completion rates, skill gap analysis</p>
+                    <p><strong>Predictions:</strong> Performance impact ROI, skill demand forecasting, training effectiveness modeling</p>
+                  </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 20px;">
+                  <h4>Module Integration & Data Quality</h4>
+                  <p>All modules share a common data model and integrate seamlessly, allowing for cross-module analysis and insights. Our standardized CSV import process ensures consistent data quality while working with existing HR systems without requiring direct integrations.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsection C -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Competitive Differentiation Matrix</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  PeopleAnalyticsLab occupies a unique market position between expensive Big 4 consulting and complex DIY platforms. Our managed service model delivers enterprise-grade analytics at a fraction of traditional consulting costs while requiring no internal expertise to operate.
+                </p>
+                <div class="table-wrap">
+                  <div class="competitive-matrix" role="table" aria-label="Competitive differentiation">
+                    <div class="matrix-header" role="columnheader">Competitor</div>
+                    <div class="matrix-header" role="columnheader">Their Approach</div>
+                    <div class="matrix-header" role="columnheader">Our Strategic Advantage</div>
+
+                    <div class="matrix-cell matrix-competitor">Big 4 Consulting<br><small>(Deloitte, PwC, KPMG, EY)</small></div>
+                    <div class="matrix-cell">€200K+ projects requiring 6-12 months, custom builds from scratch, project-based relationship ending after delivery</div>
+                    <div class="matrix-cell advantage-highlight">Ongoing partnership at 30% of project cost, 4-week deployment using proven frameworks, continuous evolution vs. one-time delivery</div>
+
+                    <div class="matrix-cell matrix-competitor">Internal Team Hiring</div>
+                    <div class="matrix-cell">Hiring 2-3 FTE specialists (€200K+ annually), building capabilities from zero, long learning curve and capability development time</div>
+                    <div class="matrix-cell advantage-highlight">Complete analytics team for cost of one senior hire, immediate expertise and proven methodologies, no recruitment or retention risks</div>
+
+                    <div class="matrix-cell matrix-competitor">HR Tech Vendors<br><small>(Workday, SAP, etc.)</small></div>
+                    <div class="matrix-cell">DIY platforms requiring internal analytics expertise, generic dashboards needing customization, ongoing platform management overhead</div>
+                    <div class="matrix-cell advantage-highlight">Managed service with insights included, industry-specific best practices pre-built, deployed in client's existing infrastructure</div>
+
+                    <div class="matrix-cell matrix-competitor">Boutique HR Consultancies</div>
+                    <div class="matrix-cell">Project-based engagements with limited technological depth, custom approaches for each client, inconsistent delivery quality</div>
+                    <div class="matrix-cell advantage-highlight">Continuous partnership model, standardized technology platform, scalable delivery with consistent quality</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Service Tiers -->
+      <section class="section" id="tiers" aria-labelledby="tiers-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">📦</div>
+            <div>
+              <h2 id="tiers-title">Service Tiers & Pricing</h2>
+              <div class="section-subtitle">Scalable solutions from €4K to €8K monthly</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="tiers-content" data-section="tiers">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Service Tiers</span>
+          </button>
+        </div>
+        <div class="section-content" id="tiers-content" role="region" aria-labelledby="tiers-title">
+          <div class="content-inner">
+            <div class="table-wrap">
+              <table>
+                <caption>Overview of tiers and pricing</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Component</th>
+                    <th scope="col">Tier 1: Foundation</th>
+                    <th scope="col">Tier 2: Growth</th>
+                    <th scope="col">Tier 3: Strategic</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Analytics Modules</strong></td>
+                    <td>Core + 1 module*</td>
+                    <td>Core + 3 modules*</td>
+                    <td>All 7 modules*</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Custom Predictions</strong></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>2 per quarter</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Strategic Enablement</strong></td>
+                    <td>Monthly check-ins + Group sessions</td>
+                    <td>+ Quarterly deep dives + CHRO briefings</td>
+                    <td>+ Strategic planning + Priority support</td>
+                  </tr>
+                  <tr style="background: var(--accent);">
+                    <td><strong>Monthly Fee</strong></td>
+                    <td><strong>€4,000</strong></td>
+                    <td><strong>€6,000</strong></td>
+                    <td><strong>€8,000</strong></td>
+                  </tr>
+                  <tr style="background: var(--accent);">
+                    <td><strong>Setup Fee</strong></td>
+                    <td>€8,000</td>
+                    <td>€12,000</td>
+                    <td>€20,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="font-size: 12px; color: var(--muted); font-style: italic;">*Each module includes both dashboard visualizations and predictive analytics</p>
+
+            <!-- Enablement -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Strategic Enablement Framework by Tier</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our Strategic Enablement transforms PeopleAnalyticsLab from a dashboard provider into a strategic partner. We enable two critical transformations: Global HRBPs become data-confident business advisors, and CHROs support strategic leadership with data-driven insights.
+                </p>
+                <div class="grid-3">
+                  <div class="card">
+                    <h4>Tier 1: Foundation Enablement</h4>
+                    <p style="color: var(--brand); font-weight: 600; margin-bottom: 10px;">€4,000/month + €8,000 setup</p>
+                    <ul>
+                      <li><strong>Quarterly Global HRBP Power Session (90 mins):</strong> Peer learning and best practice sharing</li>
+                      <li><strong>Self-Service Learning Library:</strong> Video tutorials, interpretation guides, and templates</li>
+                      <li><strong>Monthly Check-ins (30 mins):</strong> Metric reviews and urgent question resolution</li>
+                      <li><strong>Quarterly Trend Analysis:</strong> Historical patterns and model accuracy tracking</li>
+                    </ul>
+                    <p><strong>Time Investment:</strong> 8-10 hours/quarter across all Tier 1 clients</p>
+                  </div>
+                  <div class="card">
+                    <h4>Tier 2: Growth Enablement</h4>
+                    <p style="color: var(--brand); font-weight: 600; margin-bottom: 10px;">€6,000/month + €12,000 setup</p>
+                    <p><em>Everything in Tier 1, plus:</em></p>
+                    <ul>
+                      <li><strong>Quarterly HRBP Advanced Workshop (2 hours)</strong></li>
+                      <li><strong>Quarterly Strategic Briefing & Board Prep (60 mins)</strong></li>
+                      <li><strong>Board-Ready Packages</strong> with talking points and Q&A prep</li>
+                      <li><strong>Business Review Toolkits</strong> with pre-populated storylines</li>
+                    </ul>
+                    <p><strong>Additional Time:</strong> 4-5 hours/month per client</p>
+                  </div>
+                  <div class="card">
+                    <h4>Tier 3: Strategic Enablement</h4>
+                    <p style="color: var(--brand); font-weight: 600; margin-bottom: 10px;">€8,000/month + €20,000 setup</p>
+                    <p><em>Everything in Tier 2, plus:</em></p>
+                    <ul>
+                      <li><strong>Monthly HRBP 1:1 Coaching</strong> (30-minute sessions)</li>
+                      <li><strong>Quarterly Strategic Workforce Planning (2 hours)</strong></li>
+                      <li><strong>Custom Predictive Scenarios (2 per quarter)</strong></li>
+                      <li><strong>Priority Support</strong> (24-hour response time)</li>
+                    </ul>
+                    <p><strong>Additional Time:</strong> 5-7 hours/month per client</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Go-to-Market -->
+      <section class="section" id="gtm" aria-labelledby="gtm-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">🚀</div>
+            <div>
+              <h2 id="gtm-title">Go-to-Market Strategy</h2>
+              <div class="section-subtitle">Network activation to scaled acquisition</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="gtm-content" data-section="gtm">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Go-to-Market</span>
+          </button>
+        </div>
+        <div class="section-content" id="gtm-content" role="region" aria-labelledby="gtm-title">
+          <div class="content-inner">
+            <!-- Three-Phase -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Three-Phase Market Entry Strategy</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our go-to-market strategy follows a deliberate three-phase approach: starting with network activation for proof points, scaling through referrals and case studies, then expanding through thought leadership and partnerships across the Nordic region.
+                </p>
+                <div class="timeline-visual">
+                  <div class="timeline-phase">
+                    <div class="phase-date">Q3 2025</div>
+                    <div class="phase-title">Network Activation</div>
+                    <div class="phase-detail">3-5 pilot clients<br>25% discount<br>Denmark focus</div>
+                  </div>
+                  <div class="timeline-phase">
+                    <div class="phase-date">Q4 2025</div>
+                    <div class="phase-title">Proof Development</div>
+                    <div class="phase-detail">5-8 total clients<br>Standard pricing<br>Referral-driven</div>
+                  </div>
+                  <div class="timeline-phase">
+                    <div class="phase-date">Q1-Q2 2026</div>
+                    <div class="phase-title">Scaled Acquisition</div>
+                    <div class="phase-detail">15-18 clients<br>Thought leadership<br>Partner channels</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nordic expansion -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Nordic Geographic Expansion Roadmap</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our geographic expansion follows market maturity and network strength, starting with Denmark for foundation building, then expanding systematically across the Nordic region to achieve full regional coverage by Q3 2026.
+                </p>
+                <div class="geographic-expansion">
+                  <div class="country-phase">
+                    <div class="country-flag" aria-hidden="true">🇩🇰</div>
+                    <div class="country-name">Denmark</div>
+                    <div class="country-timeline">Q3-Q4 2025</div>
+                    <div class="country-status">Foundation market for initial proof points and case study development</div>
+                  </div>
+                  <div class="country-phase">
+                    <div class="country-flag" aria-hidden="true">🇸🇪</div>
+                    <div class="country-name">Sweden</div>
+                    <div class="country-timeline">Q1 2026</div>
+                    <div class="country-status">Largest Nordic market, network leverage and referral expansion</div>
+                  </div>
+                  <div class="country-phase">
+                    <div class="country-flag" aria-hidden="true">🇳🇴</div>
+                    <div class="country-name">Norway</div>
+                    <div class="country-timeline">Q2 2026</div>
+                    <div class="country-status">High-value market with strong compliance drivers and oil sector presence</div>
+                  </div>
+                  <div class="country-phase">
+                    <div class="country-flag" aria-hidden="true">🇫🇮</div>
+                    <div class="country-name">Finland</div>
+                    <div class="country-timeline">Q3 2026</div>
+                    <div class="country-status">Complete Nordic coverage, technology sector focus and EU compliance emphasis</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sales process -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Structured 4-6 Week Sales Process</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our sales process is designed for enterprise B2B purchasing cycles, with clear phases that build trust, demonstrate value, and address stakeholder concerns. The timeline typically spans 4-6 weeks from initial contact to signed contract.
+                </p>
+                <div class="grid-3">
+                  <div class="card">
+                    <h4>Weeks 1-2: Discovery & Assessment</h4>
+                    <ul>
+                      <li><strong>Initial Call with HR Director (1 hour):</strong> Problem identification and solution alignment</li>
+                      <li><strong>Data Landscape Assessment:</strong> Current systems, data quality, and integration requirements</li>
+                      <li><strong>Pain Point Deep Dive:</strong> Specific challenges with current analytics and reporting</li>
+                      <li><strong>Compliance Requirement Review:</strong> CSRD, pay transparency, and other regulatory needs</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Weeks 3-4: Solution Design & Demo</h4>
+                    <ul>
+                      <li><strong>Customized Demo with Sample Data:</strong> Show modules relevant to their specific needs</li>
+                      <li><strong>ROI Calculation Presentation:</strong> Cost comparison vs. alternatives and value realization timeline</li>
+                      <li><strong>Stakeholder Alignment Meeting:</strong> Include CFO, IT, and other decision influencers</li>
+                      <li><strong>Reference Calls:</strong> Connect with similar-sized Nordic clients if requested</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Weeks 5-6: Closing & Implementation Planning</h4>
+                    <ul>
+                      <li><strong>Contract Negotiation:</strong> Service tier selection, pricing terms, and SLA agreement</li>
+                      <li><strong>Legal and Procurement Review:</strong> Address data privacy, security, and compliance requirements</li>
+                      <li><strong>Implementation Planning:</strong> Timeline, resource allocation, and success metrics definition</li>
+                      <li><strong>Kickoff Scheduling:</strong> Set implementation start date and initial training sessions</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Financials -->
+      <section class="section" id="financials" aria-labelledby="financials-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">💰</div>
+            <div>
+              <h2 id="financials-title">Financial Projections</h2>
+              <div class="section-subtitle">Path to €800K-1M ARR by Q2 2026</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="financials-content" data-section="financials">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Financials</span>
+          </button>
+        </div>
+        <div class="section-content" id="financials-content" role="region" aria-labelledby="financials-title">
+          <div class="content-inner">
+            <!-- Revenue Growth -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Revenue Growth Trajectory Visualization</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <p style="margin-bottom: 20px; color: #475569; line-height: 1.6;">
+                  Our financial projections show a path from initial pilot clients in Q3 2025 to €800K-1M Annual Recurring Revenue by Q2 2026. The model is based on conservative client acquisition rates and proven unit economics.
+                </p>
+                <div class="chart-container">
+                  <div class="chart-title">Quarterly Revenue Progression Through Q2 2026</div>
+                  <div class="revenue-chart">
+                    <div class="revenue-bar">
+                      <div class="bar" style="height: 45px;">
+                        <div class="bar-value">€90K</div>
+                      </div>
+                      <div class="bar-label">Q3 2025<br>3 clients</div>
+                    </div>
+                    <div class="revenue-bar">
+                      <div class="bar" style="height: 102px;">
+                        <div class="bar-value">€114-204K</div>
+                      </div>
+                      <div class="bar-label">Q4 2025<br>5-8 clients</div>
+                    </div>
+                    <div class="revenue-bar">
+                      <div class="bar" style="height: 147px;">
+                        <div class="bar-value">€240-294K</div>
+                      </div>
+                      <div class="bar-label">Q1 2026<br>10-13 clients</div>
+                    </div>
+                    <div class="revenue-bar">
+                      <div class="bar" style="height: 180px;">
+                        <div class="bar-value">€330-384K</div>
+                      </div>
+                      <div class="bar-label">Q2 2026<br>15-18 clients</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table-wrap">
+                  <table>
+                    <caption>Quarterly revenue and client counts</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Quarter</th>
+                        <th scope="col">New Clients</th>
+                        <th scope="col">Total Active Clients</th>
+                        <th scope="col">Monthly Recurring Revenue</th>
+                        <th scope="col">Total Quarterly Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Q3 2025</td>
+                        <td>3 pilot clients</td>
+                        <td>3</td>
+                        <td>€18K (avg. Tier 2)</td>
+                        <td>€90K</td>
+                      </tr>
+                      <tr>
+                        <td>Q4 2025</td>
+                        <td>2-5 new clients</td>
+                        <td>5-8</td>
+                        <td>€30-48K</td>
+                        <td>€114-204K</td>
+                      </tr>
+                      <tr>
+                        <td>Q1 2026</td>
+                        <td>5 new clients</td>
+                        <td>10-13</td>
+                        <td>€60-78K</td>
+                        <td>€240-294K</td>
+                      </tr>
+                      <tr style="background: var(--accent);">
+                        <td><strong>Q2 2026</strong></td>
+                        <td><strong>5 new clients</strong></td>
+                        <td><strong>15-18</strong></td>
+                        <td><strong>€90-108K</strong></td>
+                        <td><strong>€330-384K</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unit Economics -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Unit Economics (Tier 2 Example)</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-large">65%</div>
+                    <div class="metric-small">Gross Margin</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">15-20</div>
+                    <div class="metric-small">Service Hours/Month</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">3 months</div>
+                    <div class="metric-small">CAC Payback</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">5:1</div>
+                    <div class="metric-small">LTV:CAC Ratio</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">€72K</div>
+                    <div class="metric-small">Average Annual Contract Value</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-large">&lt;10%</div>
+                    <div class="metric-small">Annual Churn Rate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Revenue model -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Revenue Model Breakdown</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-3">
+                  <div class="card">
+                    <h4>Subscription Revenue</h4>
+                    <p><strong>70%</strong> of total revenue</p>
+                    <p>€4-8K monthly recurring revenue per client providing predictable cash flow and scaling foundation</p>
+                  </div>
+                  <div class="card">
+                    <h4>Setup Fees</h4>
+                    <p><strong>25%</strong> of total revenue</p>
+                    <p>€8-20K one-time fees covering initial deployment, customization, and training</p>
+                  </div>
+                  <div class="card">
+                    <h4>Custom Projects</h4>
+                    <p><strong>5%</strong> of total revenue</p>
+                    <p>Selective hourly-rate projects for specialized analytics needs beyond standard modules</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Competition -->
+      <section class="section" id="competition" aria-labelledby="competition-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">⚔️</div>
+            <div>
+              <h2 id="competition-title">Competitive Positioning</h2>
+              <div class="section-subtitle">Unique position between consulting and technology</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="competition-content" data-section="competition">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Competition</span>
+          </button>
+        </div>
+        <div class="section-content" id="competition-content" role="region" aria-labelledby="competition-title">
+          <div class="content-inner">
+            <div class="table-wrap">
+              <table>
+                <caption>Competitor landscape and our advantages</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Competitor</th>
+                    <th scope="col">Their Model</th>
+                    <th scope="col">Our Advantage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Big 4 Consulting</strong></td>
+                    <td>€200K+ projects, 6-12 months</td>
+                    <td>Ongoing partnership at 30% cost</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Internal Hiring</strong></td>
+                    <td>2-3 FTE needed, €200K+ annually</td>
+                    <td>Complete team for cost of one hire</td>
+                  </tr>
+                  <tr>
+                    <td><strong>HR Tech Vendors</strong></td>
+                    <td>DIY platforms requiring expertise</td>
+                    <td>Managed service with insights included</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Boutique Consultancies</strong></td>
+                    <td>Project-based, limited scale</td>
+                    <td>Continuous partnership with tech depth</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="highlight-box">
+              <h3>Competitive Moat Strategy</h3>
+              <p>Build switching costs through deep integration, develop network effects via industry connections, create data advantages through cross-client insights, and establish thought leadership in Nordic HR analytics.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scaling -->
+      <section class="section" id="scaling" aria-labelledby="scaling-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">📈</div>
+            <div>
+              <h2 id="scaling-title">Organizational Strategy & Scaling</h2>
+              <div class="section-subtitle">From founder-led to scalable operations</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="scaling-content" data-section="scaling">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Scaling</span>
+          </button>
+        </div>
+        <div class="section-content" id="scaling-content" role="region" aria-labelledby="scaling-title">
+          <div class="content-inner">
+            <!-- Current Phase -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Current Phase (0-10 clients)</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Team Structure</h4>
+                    <ul>
+                      <li>Founder-led delivery</li>
+                      <li>Analytical Partners for client management</li>
+                      <li>Freelance support for technical and marketing</li>
+                      <li>Focus on standardization</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Key Focus Areas</h4>
+                    <ul>
+                      <li>Service delivery standardization</li>
+                      <li>Quality consistency through playbooks</li>
+                      <li>Client success and retention</li>
+                      <li>Rapid deployment capabilities</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Triggers -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Scaling Triggers & Milestones</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-date">3 Clients</div>
+                    <div class="timeline-content">First Analytical Partner (part-time) - Client relationship management and strategic enablement</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">5 Clients</div>
+                    <div class="timeline-content">BI Developer Support (freelance) - Dashboard development and technical maintenance</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">8 Clients</div>
+                    <div class="timeline-content">Second Analytical Partner or Strategic Partner - Geographic expansion capability</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">12 Clients</div>
+                    <div class="timeline-content">Client Success Coordinator - Onboarding and ongoing support coordination</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Partnership -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">Partnership Strategy</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Strategic Partners</h4>
+                    <ul>
+                      <li>Experienced HR consultants with Nordic networks</li>
+                      <li>Former Big 4 partners seeking flexible arrangements</li>
+                      <li>Regional expertise for geographic expansion</li>
+                      <li>Revenue sharing model with performance incentives</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Analytical Partners</h4>
+                    <ul>
+                      <li>HR analytics specialists for client management</li>
+                      <li>Data scientists for predictive model development</li>
+                      <li>BI specialists for dashboard optimization</li>
+                      <li>Fractional engagement model initially</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Priorities -->
+      <section class="section" id="priorities" aria-labelledby="priorities-title">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" aria-hidden="true">🎯</div>
+            <div>
+              <h2 id="priorities-title">Immediate Priorities</h2>
+              <div class="section-subtitle">Q3-Q4 2025 execution roadmap</div>
+            </div>
+          </div>
+          <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="priorities-content" data-section="priorities">
+            <span class="expand-icon" aria-hidden="true">▼</span>
+            <span class="visually-hidden">Toggle Priorities</span>
+          </button>
+        </div>
+        <div class="section-content" id="priorities-content" role="region" aria-labelledby="priorities-title">
+          <div class="content-inner">
+            <!-- August -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">August 2025</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Product & Service</h4>
+                    <ul>
+                      <li>Finalize service playbooks</li>
+                      <li>Complete core module standardization</li>
+                      <li>Develop pricing validation framework</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Market & Sales</h4>
+                    <ul>
+                      <li>Identify 10 high-potential prospects</li>
+                      <li>Launch LinkedIn presence</li>
+                      <li>Close first pilot client</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- September -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">September 2025</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Client Acquisition</h4>
+                    <ul>
+                      <li>3 pilots signed and onboarding</li>
+                      <li>Develop first case study</li>
+                      <li>Refine value proposition messaging</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Operations</h4>
+                    <ul>
+                      <li>Engage BI developer freelancer</li>
+                      <li>Refine delivery templates</li>
+                      <li>Document quality assurance process</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Oct-Dec -->
+            <div class="subsection">
+              <div class="subsection-header">
+                <span class="subsection-title">October-December 2025</span>
+                <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+                  <span class="expand-icon" aria-hidden="true">▼</span>
+                  <span class="visually-hidden">Toggle subsection</span>
+                </button>
+              </div>
+              <div class="subsection-content">
+                <div class="grid-2">
+                  <div class="card">
+                    <h4>Scaling</h4>
+                    <ul>
+                      <li>Scale to 5-8 clients</li>
+                      <li>Launch group enablement sessions</li>
+                      <li>Identify strategic partner</li>
+                    </ul>
+                  </div>
+                  <div class="card">
+                    <h4>Expansion Preparation</h4>
+                    <ul>
+                      <li>Prepare Sweden expansion strategy</li>
+                      <li>Develop partner evaluation criteria</li>
+                      <li>Build thought leadership content</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <h3>Success Metrics Q4 2025</h3>
+              <p><strong>Primary:</strong> 5-8 active clients, €30-48K MRR, proven service delivery model<br>
+              <strong>Secondary:</strong> 2+ case studies, first analytical partner identified, Sweden expansion plan ready</p>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
+
+  <script defer>
+    (function(){
+      const sections = document.querySelectorAll('.section');
+      const nav = document.querySelector('.nav-buttons');
+
+      // Initialize section content panels with measured height animation
+      function setExpanded(sectionEl, expand) {
+        const btn = sectionEl.querySelector('.toggle-section-btn');
+        const content = sectionEl.querySelector('.section-content');
+        if (!btn || !content) return;
+
+        btn.setAttribute('aria-expanded', String(expand));
+        // Height animation
+        if (expand) {
+          content.style.maxHeight = content.scrollHeight + 'px';
+        } else {
+          // set current height to enable transition to 0
+          content.style.maxHeight = content.scrollHeight + 'px';
+          requestAnimationFrame(()=> content.style.maxHeight = '0px');
+        }
+      }
+
+      // Prepare all contents collapsed by default
+      document.querySelectorAll('.section-content').forEach(c => { c.style.maxHeight = '0px'; });
+
+      // Toggle buttons (sections)
+      document.querySelectorAll('.toggle-section-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.section;
+          const section = document.getElementById(id);
+          const isOpen = btn.getAttribute('aria-expanded') === 'true';
+          setExpanded(section, !isOpen);
+          if (!isOpen) {
+            history.replaceState(null, '', `#${id}`);
+            localStorage.setItem('pal:lastSection', id);
+            section.scrollIntoView({behavior:'smooth', block:'start'});
+            // mark nav
+            updateActiveNav(id);
+            // collapse others
+            sections.forEach(s => { if (s.id !== id) setExpanded(s, false); });
+          }
+        });
+      });
+
+      // Subsection toggles
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('.toggle-subsection-btn');
+        if (!t) return;
+        const container = t.closest('.subsection');
+        const content = container.querySelector('.subsection-content');
+        const expanded = t.getAttribute('aria-expanded') === 'true';
+        t.setAttribute('aria-expanded', String(!expanded));
+        container.classList.toggle('open', !expanded);
+        content.style.display = expanded ? 'none' : 'block';
+      });
+
+      // Nav behavior
+      function updateActiveNav(target) {
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.target === target));
+      }
+      nav.addEventListener('click', (e)=>{
+        const btn = e.target.closest('.nav-btn');
+        if (!btn) return;
+        const target = btn.dataset.target;
+        updateActiveNav(target);
+        sections.forEach(s => setExpanded(s, s.id === target));
+        const el = document.getElementById(target);
+        if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null, '', `#${target}`);
+        localStorage.setItem('pal:lastSection', target);
+      });
+
+      // Deep link / restore last section
+      function initialSectionId() {
+        const hash = location.hash.replace('#','').trim();
+        const last = localStorage.getItem('pal:lastSection');
+        if (hash && document.getElementById(hash)) return hash;
+        if (last && document.getElementById(last)) return last;
+        return 'vision';
+      }
+      const initial = initialSectionId();
+      sections.forEach(s => setExpanded(s, s.id === initial));
+      updateActiveNav(initial);
+
+      // Adjust heights on resize for expanded sections
+      window.addEventListener('resize', () => {
+        document.querySelectorAll('.section').forEach(section => {
+          const btn = section.querySelector('.toggle-section-btn');
+          const content = section.querySelector('.section-content');
+          if (btn && content && btn.getAttribute('aria-expanded') === 'true') {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
+```
