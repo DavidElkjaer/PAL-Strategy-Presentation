@@ -1,5 +1,3 @@
-V2
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -251,26 +249,77 @@ V2
     .subsection.open .subsection-content { display: block; }
     .subsection.open .expand-icon { transform: rotate(180deg); }
 
-    /* Visual charts */
-    .chart-container {
-      background: white; border-radius: var(--radius-md); padding: 20px; margin: 20px 0; border: 1px solid #e2e8f0;
-    }
-    .chart-title { font-size: 18px; font-weight: 600; color: var(--brand); margin-bottom: 15px; text-align: center; }
-    .revenue-chart {
-      display: flex; align-items: end; justify-content: space-around;
-      height: 200px; margin: 20px 0; padding: 20px 0; border-bottom: 2px solid #e2e8f0; position: relative;
-    }
-    .revenue-bar { display: flex; flex-direction: column; align-items: center; width: clamp(56px, 10vw, 90px); }
-    .bar {
-      background: linear-gradient(135deg, var(--brand) 0%, var(--bg-2) 100%);
-      border-radius: 4px 4px 0 0; width: 70%; position: relative; transition: all 0.3s ease;
-    }
-    .bar:hover { background: linear-gradient(135deg, var(--bg-2) 0%, #1a6f8a 100%); transform: scale(1.05); }
-    .bar-label { margin-top: 10px; font-size: 12px; font-weight: 600; color: #475569; text-align: center; }
-    .bar-value {
-      position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
-      background: var(--brand); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap;
-    }
+/* Visual charts */
+.chart-container {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #e2e8f0;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brand);
+  text-align: center;
+  /* more breathing room so labels don't overlap the title */
+  margin-bottom: 24px;
+}
+
+.revenue-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  /* a little taller + extra top padding to clear the value bubbles */
+  height: 240px;
+  padding: 40px 0 24px;
+  border-bottom: 2px solid #e2e8f0;
+  position: relative;
+  gap: 16px;
+}
+
+.revenue-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(56px, 9vw, 84px);
+}
+
+.bar {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--bg-2) 100%);
+  border-radius: 4px 4px 0 0;
+  width: 70%;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.bar:hover {
+  background: linear-gradient(135deg, var(--bg-2) 0%, #1a6f8a 100%);
+  transform: scale(1.05);
+}
+
+/* value “pills” – slightly tighter + sits closer to the bar */
+.bar-value {
+  position: absolute;
+  top: -18px;          /* was -25px */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brand);
+  color: white;
+  padding: 3px 8px;    /* was 4px 8px */
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bar-label {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+}
 
     .timeline-visual {
       display: flex; justify-content: space-between; align-items: center; margin: 30px 0; position: relative; padding: 20px 0;
@@ -401,6 +450,7 @@ V2
     <!-- Navigation -->
     <nav class="nav-container" aria-label="Section navigation">
       <div class="nav-buttons">
+      	<button class="nav-btn" data-target="exec">Executive Summary</button>
         <button class="nav-btn active" data-target="vision">Vision & Mission</button>
         <button class="nav-btn" data-target="market">Market Opportunity</button>
         <button class="nav-btn" data-target="solution">Solution</button>
@@ -414,6 +464,68 @@ V2
     </nav>
 
     <main>
+    
+    
+<section class="section" id="exec" aria-labelledby="exec-title">
+  <div class="section-header">
+    <div class="section-title">
+      <div class="section-icon" aria-hidden="true">🧭</div>
+      <div>
+        <h2 id="exec-title">Executive Summary</h2>
+        <div class="section-subtitle">What we are, who we serve, and where we’re going</div>
+      </div>
+    </div>
+    <button class="toggle-section-btn" type="button" aria-expanded="false" aria-controls="exec-content" data-section="exec">
+      <span class="expand-icon" aria-hidden="true">▼</span>
+      <span class="visually-hidden">Toggle Executive Summary</span>
+    </button>
+  </div>
+  <div class="section-content" id="exec-content" role="region" aria-labelledby="exec-title">
+    <div class="content-inner">
+      <div class="grid-3">
+        <div class="card">
+          <h4>What We Are</h4>
+          <p>Managed HR analytics as a subscription—your fractional analytics team delivering best-practice Power BI dashboards, predictive models, and strategic enablement. Everything runs in the client’s Microsoft 365 tenant.</p>
+          <p class="metric-small">€4–8K monthly + setup; ongoing partnership rather than one-off projects.</p>
+        </div>
+        <div class="card">
+          <h4>Who We Serve</h4>
+          <p>Mid-sized Nordic companies (1–5K employees) with solid HR systems but limited analytics capacity. We bridge the “too small to hire, too complex for DIY” gap.</p>
+          <p class="metric-small">~2,500 target companies; estimated €75M TAM.</p>
+        </div>
+        <div class="card">
+          <h4>Near-Term Targets</h4>
+          <ul>
+            <li>Q3–Q4 2025: 5–10 active clients</li>
+            <li>€300–600K ARR by year-end</li>
+            <li>Nordic expansion through Q1–Q2 2026</li>
+          </ul>
+          <p class="metric-small">Milestones based on conservative acquisition assumptions.</p>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <h3>Stakeholder Value Propositions</h3>
+        <div class="grid-3">
+          <div class="card">
+            <h4>HR Director</h4>
+            <p>“Complete analytics team for the cost of one hire.” Standardized dashboards + predictive models + enablement that turn insights into action.</p>
+          </div>
+          <div class="card">
+            <h4>CFO</h4>
+            <p>Compliance-ready reporting, predictable spend, clear payback (short CAC payback and strong LTV:CAC), and forward-looking forecasts.</p>
+          </div>
+          <div class="card">
+            <h4>CEO</h4>
+            <p>Board-level visibility into talent health and risks—with predictive scenarios that inform decisions before issues escalate.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
       <!-- Vision & Mission -->
       <section class="section" id="vision" aria-labelledby="vision-title">
         <div class="section-header">
@@ -648,6 +760,33 @@ V2
                 </div>
               </div>
             </div>
+            
+            <div class="subsection">
+  <div class="subsection-header">
+    <span class="subsection-title">Who Benefits & How</span>
+    <button class="toggle-subsection-btn" type="button" aria-expanded="false">
+      <span class="expand-icon" aria-hidden="true">▼</span>
+      <span class="visually-hidden">Toggle subsection</span>
+    </button>
+  </div>
+  <div class="subsection-content">
+    <div class="grid-3">
+      <div class="card">
+        <h4>HR Business Partners</h4>
+        <p>Upskilled to data-confident advisors through playbooks, short trainings, and recurring sessions aligned to the business calendar.</p>
+      </div>
+      <div class="card">
+        <h4>Finance</h4>
+        <p>Predictable MRR, measurable ROI (short CAC payback, strong LTV:CAC), and rapid time-to-value from pre-built modules.</p>
+      </div>
+      <div class="card">
+        <h4>Leadership</h4>
+        <p>Quarterly strategic briefings, board-ready packs, and scenario modeling that tie people metrics to business outcomes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
             <!-- Subsection B -->
             <div class="subsection">
@@ -1490,119 +1629,179 @@ V2
     </main>
   </div>
 
-  <script defer>
-    (function(){
-      const sections = document.querySelectorAll('.section');
-      const nav = document.querySelector('.nav-buttons');
-      const navContainer = document.querySelector('.nav-container');
+<script defer>
+(function () {
+  'use strict';
 
-      function calcNavOffset(){
-        if (!navContainer) return 0;
-        const styles = getComputedStyle(navContainer);
-        const topGap = parseFloat(styles.top) || 0;
-        return navContainer.offsetHeight + topGap + 12;
-      }
-      function applyNavOffsetVar(){
-        const px = calcNavOffset();
-        document.documentElement.style.setProperty('--nav-offset', px + 'px');
-      }
-      function scrollToWithOffset(el){
-        if (!el) return;
-        const y = el.getBoundingClientRect().top + window.pageYOffset - calcNavOffset();
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+  var sections      = document.querySelectorAll('.section');
+  var nav           = document.querySelector('.nav-buttons');
+  var navContainer  = document.querySelector('.nav-container');
+  var ANIM_MS       = 400; // must match CSS
 
-      // Initialize section content panels with measured height animation
-      function setExpanded(sectionEl, expand) {
-        const btn = sectionEl.querySelector('.toggle-section-btn');
-        const content = sectionEl.querySelector('.section-content');
-        if (!btn || !content) return;
+  function calcNavOffset() {
+    if (!navContainer) return 0;
+    var styles = getComputedStyle(navContainer);
+    var topGap = parseFloat(styles.top) || 0;
+    return navContainer.offsetHeight + topGap + 12;
+  }
+  function applyNavOffsetVar() {
+    var px = calcNavOffset();
+    document.documentElement.style.setProperty('--nav-offset', px + 'px');
+  }
+  function scrollToWithOffset(el) {
+    if (!el) return;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - calcNavOffset();
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
 
-        btn.setAttribute('aria-expanded', String(expand));
-        // Height animation
-        if (expand) {
-          content.style.maxHeight = content.scrollHeight + 'px';
-        } else {
-          // set current height to enable transition to 0
-          content.style.maxHeight = content.scrollHeight + 'px';
-          requestAnimationFrame(()=> content.style.maxHeight = '0px');
-        }
-      }
+  // Expand/collapse WITH animation (used for the target that opens)
+  function setExpanded(sectionEl, expand) {
+    var btn = sectionEl.querySelector('.toggle-section-btn');
+    var content = sectionEl.querySelector('.section-content');
+    if (!btn || !content) return;
+    btn.setAttribute('aria-expanded', String(expand));
+    content.style.transition = 'max-height .4s ease';
+    if (expand) {
+      content.style.maxHeight = content.scrollHeight + 'px';
+    } else {
+      content.style.maxHeight = content.scrollHeight + 'px';
+      requestAnimationFrame(function(){ content.style.maxHeight = '0px'; });
+    }
+  }
 
-      // Prepare all contents collapsed by default
-      document.querySelectorAll('.section-content').forEach(c => { c.style.maxHeight = '0px'; });
+  // Collapse instantly (no animation) to avoid layout shifting after we scroll
+  function snapClose(sectionEl) {
+    var btn = sectionEl.querySelector('.toggle-section-btn');
+    var content = sectionEl.querySelector('.section-content');
+    if (!btn || !content) return;
+    btn.setAttribute('aria-expanded', 'false');
+    content.style.transition = 'none';
+    content.style.maxHeight = '0px';
+    content.offsetHeight; // force reflow
+    content.style.transition = 'max-height .4s ease';
+  }
 
-      // Toggle buttons (sections)
-      document.querySelectorAll('.toggle-section-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.section;
-          const section = document.getElementById(id);
-          const isOpen = btn.getAttribute('aria-expanded') === 'true';
-          setExpanded(section, !isOpen);
-          if (!isOpen) {
-            history.replaceState(null, '', `#${id}`);
-            localStorage.setItem('pal:lastSection', id);
-            scrollToWithOffset(section);
-            // mark nav
-            updateActiveNav(id);
-            // collapse others
-            sections.forEach(s => { if (s.id !== id) setExpanded(s, false); });
-          }
-        });
+  // Start collapsed
+  document.querySelectorAll('.section-content').forEach(function(c){
+    c.style.maxHeight = '0px';
+  });
+
+  // Keep the --nav-offset accurate
+  applyNavOffsetVar();
+  window.addEventListener('resize', applyNavOffsetVar);
+  window.addEventListener('load', applyNavOffsetVar);
+  if (window.ResizeObserver && navContainer) {
+    new ResizeObserver(applyNavOffsetVar).observe(navContainer);
+  }
+
+  function updateActiveNav(target) {
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.target === target);
+    });
+  }
+
+  // Top NAV clicks
+  if (nav) {
+    nav.addEventListener('click', function (e) {
+      var btn = e.target.closest('.nav-btn');
+      if (!btn) return;
+      var target = btn.dataset.target;
+      var el = document.getElementById(target);
+
+      sections.forEach(function(s){
+        if (s.id === target) setExpanded(s, true);
+        else snapClose(s);
       });
 
-      // Subsection toggles
-      document.addEventListener('click', (e) => {
-        const t = e.target.closest('.toggle-subsection-btn');
-        if (!t) return;
-        const container = t.closest('.subsection');
-        const content = container.querySelector('.subsection-content');
-        const expanded = t.getAttribute('aria-expanded') === 'true';
-        t.setAttribute('aria-expanded', String(!expanded));
-        container.classList.toggle('open', !expanded);
-        content.style.display = expanded ? 'none' : 'block';
-      });
+      updateActiveNav(target);
+      try { history.replaceState(null, '', '#' + target); } catch(e){}
+      try { localStorage.setItem('pal:lastSection', target); } catch(e){}
 
-      // Nav behavior
-      function updateActiveNav(target) {
-        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.target === target));
-      }
-      nav.addEventListener('click', (e)=>{
-        const btn = e.target.closest('.nav-btn');
-        if (!btn) return;
-        const target = btn.dataset.target;
-        updateActiveNav(target);
-        sections.forEach(s => setExpanded(s, s.id === target));
-        const el = document.getElementById(target);
+      requestAnimationFrame(function(){
         scrollToWithOffset(el);
-        history.replaceState(null, '', `#${target}`);
-        localStorage.setItem('pal:lastSection', target);
+        setTimeout(function(){ scrollToWithOffset(el); }, ANIM_MS + 50);
+      });
+    });
+  }
+
+  // Header toggle buttons (one section at a time)
+  document.querySelectorAll('.toggle-section-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-section');
+      if (!id) return;
+      var section = document.getElementById(id);
+      var isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      if (isOpen) { setExpanded(section, false); return; }
+
+      sections.forEach(function(s){
+        if (s.id !== id) snapClose(s);
+        else setExpanded(s, true);
       });
 
-      // Deep link / restore last section
-      function initialSectionId() {
-        const hash = location.hash.replace('#','').trim();
-        const last = localStorage.getItem('pal:lastSection');
-        if (hash && document.getElementById(hash)) return hash;
-        if (last && document.getElementById(last)) return last;
-        return 'vision';
-      }
-      const initial = initialSectionId();
-      sections.forEach(s => setExpanded(s, s.id === initial));
-      updateActiveNav(initial);
+      updateActiveNav(id);
+      try { history.replaceState(null, '', '#' + id); } catch(e){}
+      try { localStorage.setItem('pal:lastSection', id); } catch(e){}
 
-      // Adjust heights on resize for expanded sections
-      window.addEventListener('resize', () => {
-        document.querySelectorAll('.section').forEach(section => {
-          const btn = section.querySelector('.toggle-section-btn');
-          const content = section.querySelector('.section-content');
-          if (btn && content && btn.getAttribute('aria-expanded') === 'true') {
-            content.style.maxHeight = content.scrollHeight + 'px';
-          }
+      requestAnimationFrame(function(){
+        scrollToWithOffset(section);
+        setTimeout(function(){ scrollToWithOffset(section); }, ANIM_MS + 50);
+      });
+    });
+  });
+
+  // Subsection toggles (open/close inner boxes) using event delegation
+  document.addEventListener('click', function(e){
+    var closest = e.target.closest ? e.target.closest('.toggle-subsection-btn') : null;
+    if (!closest) return;
+
+    var subsection = closest.closest('.subsection');
+    var isOpen = closest.getAttribute('aria-expanded') === 'true';
+    closest.setAttribute('aria-expanded', String(!isOpen));
+    if (subsection) {
+      if (!isOpen) subsection.classList.add('open');
+      else subsection.classList.remove('open');
+    }
+
+    // If parent section is open, recalc its height to fit new content
+    var parentSection = closest.closest('.section');
+    if (parentSection) {
+      var parentBtn = parentSection.querySelector('.toggle-section-btn');
+      var parentContent = parentSection.querySelector('.section-content');
+      if (parentBtn && parentContent && parentBtn.getAttribute('aria-expanded') === 'true') {
+        requestAnimationFrame(function(){
+          parentContent.style.maxHeight = parentContent.scrollHeight + 'px';
         });
-      });
-    })();
-  </script>
+      }
+    }
+  });
+
+  // Initial state (deep link / last section)
+  function initialSectionId() {
+    var hash = (location.hash || '').replace('#','').trim();
+    var last = null;
+    try { last = localStorage.getItem('pal:lastSection'); } catch(e){}
+    if (hash && document.getElementById(hash)) return hash;
+    if (last && document.getElementById(last)) return last;
+    return 'vision';
+  }
+
+  var initial = initialSectionId();
+  sections.forEach(function(s){ if (s.id === initial) setExpanded(s, true); else snapClose(s); });
+  updateActiveNav(initial);
+
+  // Keep height correct if window size changes while a section is open
+  window.addEventListener('resize', function(){
+    sections.forEach(function(section){
+      var btn = section.querySelector('.toggle-section-btn');
+      var content = section.querySelector('.section-content');
+      if (btn && content && btn.getAttribute('aria-expanded') === 'true') {
+        content.style.maxHeight = content.scrollHeight + 'px';
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
 ```
